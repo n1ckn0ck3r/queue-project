@@ -1,4 +1,4 @@
-package com.example.queue.handlers;
+package com.example.queue.handler;
 
 import com.example.queue.model.Token;
 import com.example.queue.repository.TokenRepository;

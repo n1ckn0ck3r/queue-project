@@ -27,15 +27,27 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
+    @ManyToOne @JoinColumn(name = "group_id")
+    private Group group;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.role = Role.USER;
+    }
+
+    public User(String username, String email, String password, Role role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     @Override

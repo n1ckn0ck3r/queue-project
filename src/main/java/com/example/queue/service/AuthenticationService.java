@@ -3,14 +3,13 @@ package com.example.queue.service;
 import com.example.queue.dto.AuthenticationResponseDto;
 import com.example.queue.dto.LoginRequestDto;
 import com.example.queue.dto.RegistrationRequestDto;
-import com.example.queue.model.Role;
+import com.example.queue.exception.BadRequestException;
 import com.example.queue.model.Token;
 import com.example.queue.model.User;
 import com.example.queue.repository.TokenRepository;
 import com.example.queue.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,15 +41,27 @@ public class AuthenticationService {
         this.tokenRepository = tokenRepository;
     }
 
-    public void register(RegistrationRequestDto registrationRequestDto) {
-        User user = new User();
+    public AuthenticationResponseDto register(RegistrationRequestDto request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new BadRequestException("Пользователь с таким именем уже существует");
+        }
 
-        user.setUsername(registrationRequestDto.getUsername());
-        user.setEmail(registrationRequestDto.getEmail());
-        user.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
-        user.setRole(Role.USER);
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new BadRequestException("Пользователь с такой почтой уже существует");
+        }
 
+        User user = new User(
+                request.getUsername(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword())
+        );
         userRepository.save(user);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(accessToken, refreshToken, user);
+
+        return new AuthenticationResponseDto(accessToken, refreshToken);
     }
 
     private void revokeAllToken(User user) {
@@ -82,7 +93,7 @@ public class AuthenticationService {
           )
         );
 
-        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Не найдено такого пользователя"));
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
