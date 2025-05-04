@@ -6,15 +6,18 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     @Value("${queue.app.secret_key}")
     private String secretKey;
@@ -26,10 +29,6 @@ public class JwtService {
     private long refreshTokenLifetime;
 
     private final TokenRepository tokenRepository;
-
-    public JwtService(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
@@ -77,6 +76,7 @@ public class JwtService {
         return !extractExpiration(token).before(new Date());
     }
 
+    @Transactional
     public boolean isAccessTokenValid(String token, UserDetails user) {
         String username = extractUsername(token);
         boolean isValidToken = tokenRepository.findByAccessToken(token)
@@ -87,6 +87,7 @@ public class JwtService {
                 && isValidToken;
     }
 
+    @Transactional
     public boolean isRefreshTokenValid(String token, UserDetails user) {
         String username = extractUsername(token);
         boolean isValidToken = tokenRepository.findByRefreshToken(token)

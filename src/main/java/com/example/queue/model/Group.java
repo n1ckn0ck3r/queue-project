@@ -27,4 +27,8 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     private List<User> users;
+
+    public Group(String groupName) {
+        this.groupName = groupName;
+    }
 }

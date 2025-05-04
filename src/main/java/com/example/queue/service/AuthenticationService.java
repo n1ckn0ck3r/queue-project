@@ -4,12 +4,14 @@ import com.example.queue.dto.AuthenticationResponseDto;
 import com.example.queue.dto.LoginRequestDto;
 import com.example.queue.dto.RegistrationRequestDto;
 import com.example.queue.exception.BadRequestException;
+import com.example.queue.exception.UnauthorizedException;
 import com.example.queue.model.Token;
 import com.example.queue.model.User;
 import com.example.queue.repository.TokenRepository;
 import com.example.queue.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,29 +19,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
-
-    public AuthenticationService(
-            UserRepository userRepository,
-            JwtService jwtService,
-            PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager,
-            TokenRepository tokenRepository) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.tokenRepository = tokenRepository;
-    }
 
     public AuthenticationResponseDto register(RegistrationRequestDto request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -104,13 +96,13 @@ public class AuthenticationService {
         return new AuthenticationResponseDto(accessToken, refreshToken);
     }
 
-    public ResponseEntity<AuthenticationResponseDto> refreshToken(
+    public AuthenticationResponseDto refreshToken(
             HttpServletRequest request,
             HttpServletResponse response) {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new UnauthorizedException("");
         }
 
         String token = authorizationHeader.substring(7);
@@ -125,9 +117,9 @@ public class AuthenticationService {
             revokeAllToken(user);
             saveUserToken(accessToken, refreshToken, user);
 
-            return new ResponseEntity<>(new AuthenticationResponseDto(accessToken, refreshToken), HttpStatus.OK);
+            return new AuthenticationResponseDto(accessToken, refreshToken);
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        throw new UnauthorizedException("");
     }
 }

@@ -20,4 +20,8 @@ public class Discipline {
 
     @ManyToMany(mappedBy = "disciplines")
     private Set<Group> groups;
+
+    public Discipline(String disciplineName) {
+        this.disciplineName = disciplineName;
+    }
 }

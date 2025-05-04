@@ -1,9 +1,7 @@
 package com.example.queue.handler;
 
 import com.example.queue.dto.ErrorResponseDto;
-import com.example.queue.exception.BadRequestException;
-import com.example.queue.exception.ForbiddenException;
-import com.example.queue.exception.UnauthorizedException;
+import com.example.queue.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,5 +34,17 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleNotFound(NoHandlerFoundException e) {
         ErrorResponseDto body = new ErrorResponseDto(LocalDateTime.now(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleNotFound(NotFoundException e) {
+        ErrorResponseDto body = new ErrorResponseDto(LocalDateTime.now(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponseDto> handleConflict(ConflictException e) {
+        ErrorResponseDto body = new ErrorResponseDto(LocalDateTime.now(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 }

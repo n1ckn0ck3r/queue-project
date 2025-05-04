@@ -1,23 +1,33 @@
 package com.example.queue.service;
 
+import com.example.queue.dto.UserDto;
+import com.example.queue.exception.NotFoundException;
 import com.example.queue.model.User;
 import com.example.queue.repository.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
    private final UserRepository userRepository;
 
-   public UserService(UserRepository userRepository) {
-       this.userRepository = userRepository;
+   @Override
+   public User loadUserByUsername(String username) throws UsernameNotFoundException {
+       return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Пользователь с таким именем не найден"));
    }
 
-   @Override
-   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Пользователь с таким именем не найден"));
+   public User loadUserById(Long id) {
+       return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
+   }
+
+   public UserDto loadUserResponseDtoById(Long id) {
+       User user = loadUserById(id);
+       return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
    }
 
    public boolean existsByUsername(String username) {
