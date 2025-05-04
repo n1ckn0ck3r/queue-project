@@ -19,6 +19,8 @@ public class Discipline {
     private String disciplineName;
 
     @ManyToMany(mappedBy = "disciplines")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Group> groups;
 
     public Discipline(String disciplineName) {

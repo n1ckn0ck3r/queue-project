@@ -1,9 +1,7 @@
 package com.example.queue.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
@@ -23,6 +21,8 @@ public class Group {
     @ManyToMany @JoinTable(name = "group_disciplines",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "discipline_id"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Discipline> disciplines;
 
     @OneToMany(mappedBy = "group")
