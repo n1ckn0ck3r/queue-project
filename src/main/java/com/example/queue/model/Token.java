@@ -21,7 +21,7 @@ public class Token {
     private String refreshToken;
 
     @Column(name = "logged_out")
-    private boolean loggedOut;
+    private Boolean loggedOut;
 
     @ManyToOne @JoinColumn(name = "user_id")
     private User user;

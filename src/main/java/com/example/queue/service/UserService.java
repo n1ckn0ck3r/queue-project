@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,9 +27,13 @@ public class UserService implements UserDetailsService {
        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
    }
 
-   public UserDto loadUserResponseDtoById(Long id) {
+   public UserDto loadUserDtoById(Long id) {
        User user = loadUserById(id);
        return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+   }
+
+   public List<UserDto> loadAllUserDtoList() {
+       return UserDto.fromList(userRepository.findAll());
    }
 
    public boolean existsByUsername(String username) {

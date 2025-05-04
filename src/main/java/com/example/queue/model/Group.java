@@ -20,9 +20,7 @@ public class Group {
 
     @ManyToMany @JoinTable(name = "group_disciplines",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "discipline_id"))
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+            inverseJoinColumns = @JoinColumn(name = "discipline_id")) @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<Discipline> disciplines;
 
     @OneToMany(mappedBy = "group")

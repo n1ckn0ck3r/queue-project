@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -34,6 +35,9 @@ public class User implements UserDetails {
 
     @ManyToOne @JoinColumn(name = "group_id")
     private Group group;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Queue> queues;
 
     public User(String username, String email, String password) {
         this.username = username;
