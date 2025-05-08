@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class JwtService {
     @Value("${queue.app.secret_key}")
@@ -76,22 +77,20 @@ public class JwtService {
         return !extractExpiration(token).before(new Date());
     }
 
-    @Transactional
     public boolean isAccessTokenValid(String token, UserDetails user) {
         String username = extractUsername(token);
         boolean isValidToken = tokenRepository.findByAccessToken(token)
-                .map(t -> !t.isLoggedOut()).orElse(false);
+                .map(t -> !t.getLoggedOut()).orElse(false);
 
         return username.equals(user.getUsername())
                 && isTokenExpired(token)
                 && isValidToken;
     }
 
-    @Transactional
     public boolean isRefreshTokenValid(String token, UserDetails user) {
         String username = extractUsername(token);
         boolean isValidToken = tokenRepository.findByRefreshToken(token)
-                .map(t -> !t.isLoggedOut()).orElse(false);
+                .map(t -> !t.getLoggedOut()).orElse(false);
 
         return username.equals(user.getUsername())
                 && isTokenExpired(token)

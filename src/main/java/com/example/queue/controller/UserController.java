@@ -1,5 +1,6 @@
 package com.example.queue.controller;
 
+import com.example.queue.dto.QueueDto;
 import com.example.queue.dto.UserDto;
 import com.example.queue.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,17 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable long id) {
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.loadUserDtoById(id));
     }
 
     @GetMapping("/")
     public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok(userService.loadAllUserDtoList());
+    }
+
+    @GetMapping("/{id}/queues")
+    public ResponseEntity<List<QueueDto>> getQueuesByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getQueuesByUserId(id));
     }
 }

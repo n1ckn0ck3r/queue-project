@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class GroupDto {
     private Long id;
     private String groupName;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<UserDto> users;
+    private List<UserDto> users = new ArrayList<>();
 
     public static GroupDto from(Group group) {
         return new GroupDto(group.getId(), group.getGroupName(), UserDto.fromList(group.getUsers()));

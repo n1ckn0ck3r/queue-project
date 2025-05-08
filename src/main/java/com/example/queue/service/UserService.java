@@ -1,5 +1,6 @@
 package com.example.queue.service;
 
+import com.example.queue.dto.QueueDto;
 import com.example.queue.dto.UserDto;
 import com.example.queue.exception.NotFoundException;
 import com.example.queue.model.User;
@@ -28,8 +29,11 @@ public class UserService implements UserDetailsService {
    }
 
    public UserDto loadUserDtoById(Long id) {
-       User user = loadUserById(id);
-       return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+       return UserDto.from(loadUserById(id));
+   }
+
+   public List<QueueDto> getQueuesByUserId(Long id) {
+       return QueueDto.fromSet(loadUserById(id).getQueues());
    }
 
    public List<UserDto> loadAllUserDtoList() {

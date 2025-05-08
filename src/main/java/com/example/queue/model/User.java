@@ -6,9 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -31,13 +29,13 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    private List<Token> tokens = new ArrayList<>();
 
     @ManyToOne @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToMany(mappedBy = "users")
-    private Set<Queue> queues;
+    private Set<Queue> queues = new HashSet<>();
 
     public User(String username, String email, String password) {
         this.username = username;

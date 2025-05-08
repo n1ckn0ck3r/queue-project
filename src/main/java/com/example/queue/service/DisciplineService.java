@@ -27,7 +27,6 @@ public class DisciplineService {
     }
 
     public DisciplineDto getDisciplineById(Long id) {
-        Discipline discipline = disciplineRepository.findById(id).orElseThrow(() -> new NotFoundException("Дисциплины с таким id не существует"));
-        return new DisciplineDto(discipline.getId(), discipline.getDisciplineName());
+        return DisciplineDto.from(disciplineRepository.findById(id).orElseThrow(() -> new NotFoundException("Дисциплины с таким id не существует")));
     }
 }
