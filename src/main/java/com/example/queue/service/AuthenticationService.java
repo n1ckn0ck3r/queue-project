@@ -12,8 +12,6 @@ import com.example.queue.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -102,7 +100,7 @@ public class AuthenticationService {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Попытка  неавторизованного доступа");
         }
 
         String token = authorizationHeader.substring(7);
@@ -120,6 +118,6 @@ public class AuthenticationService {
             return new AuthenticationResponseDto(accessToken, refreshToken);
         }
 
-        throw new UnauthorizedException("");
+        throw new UnauthorizedException("Попытка  неавторизованного доступа");
     }
 }

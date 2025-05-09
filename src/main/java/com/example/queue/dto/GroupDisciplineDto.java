@@ -1,5 +1,7 @@
 package com.example.queue.dto;
 
+import com.example.queue.model.Discipline;
+import com.example.queue.model.Group;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +24,13 @@ public class GroupDisciplineDto {
     public GroupDisciplineDto(GroupDto groupDto, DisciplineDto disciplineDto) {
         this.groupDto = groupDto;
         this.disciplineDto = disciplineDto;
+    }
+
+    public static GroupDisciplineDto from(GroupDto groupDto, DisciplineDto disciplineDto) {
+        return new GroupDisciplineDto(groupDto, disciplineDto);
+    }
+
+    public static GroupDisciplineDto from(Group group, Discipline discipline) {
+        return new GroupDisciplineDto(GroupDto.from(group), DisciplineDto.from(discipline));
     }
 }

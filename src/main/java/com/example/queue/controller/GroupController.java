@@ -17,7 +17,7 @@ import java.util.List;
 public class GroupController {
     private final GroupService groupService;
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<GroupDto> addGroup(@RequestBody GroupDto groupDto) {
         return ResponseEntity.ok(groupService.addGroup(groupDto));
     }
@@ -27,9 +27,49 @@ public class GroupController {
         return ResponseEntity.ok(groupService.getGroupById(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<GroupDto> updateGroupById(@PathVariable Long id, @RequestBody GroupDto groupDto) {
+        return ResponseEntity.ok(groupService.updateGroupById(id, groupDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GroupDto> deleteGroupById(@PathVariable Long id) {
+        return ResponseEntity.ok(groupService.deleteGroupById(id));
+    }
+
+    @GetMapping("/{id}/disciplines")
+    public ResponseEntity<List<DisciplineDto>> getDisciplinesByGroupId(@PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getDisciplinesByGroupId(id));
+    }
+
     @PostMapping("/{id}/users")
     public ResponseEntity<GroupDto> addUsersToGroup(@PathVariable Long id, @RequestBody ListDataDto<Long> userIds) {
         return ResponseEntity.ok(groupService.addUsersToGroup(id, userIds.getData()));
+    }
+
+    @DeleteMapping("/{id}/users")
+    public ResponseEntity<GroupDto> deleteUsersFromGroup(@PathVariable Long id, @RequestBody ListDataDto<Long> userIds) {
+        return ResponseEntity.ok(groupService.deleteUsersFromGroup(id, userIds.getData()));
+    }
+
+    @PostMapping("/{id}/disciplines")
+    public ResponseEntity<List<GroupDisciplineDto>> addDisciplinesToGroup(@PathVariable Long id, @RequestBody ListDataDto<Long> disciplineIds) {
+        return ResponseEntity.ok(groupService.addDisciplinesToGroup(id, disciplineIds.getData()));
+    }
+
+    @DeleteMapping("/{id}/disciplines")
+    public ResponseEntity<List<GroupDisciplineDto>> deleteDisciplinesFromGroup(@PathVariable Long id, @RequestBody ListDataDto<Long> disciplineIds) {
+        return ResponseEntity.ok(groupService.deleteDisciplinesFromGroup(id, disciplineIds.getData()));
+    }
+
+    @PostMapping("/{groupId}/users/{userId}")
+    public ResponseEntity<GroupDto> addUserToGroup(@PathVariable Long groupId, @PathVariable Long userId) {
+        return ResponseEntity.ok(groupService.addUserToGroup(groupId, userId));
+    }
+
+    @DeleteMapping("/{groupId}/users/{userId}")
+    public ResponseEntity<GroupDto> deleteUserFromGroup(@PathVariable Long groupId, @PathVariable Long userId) {
+        return ResponseEntity.ok(groupService.deleteUserFromGroup(groupId, userId));
     }
 
     @PostMapping("/{groupId}/disciplines/{disciplineId}")
@@ -37,8 +77,8 @@ public class GroupController {
         return ResponseEntity.ok(groupService.addDisciplineToGroup(groupId, disciplineId));
     }
 
-    @GetMapping("/{id}/disciplines")
-    public ResponseEntity<List<DisciplineDto>> getDisciplinesByGroupId(@PathVariable Long id) {
-        return ResponseEntity.ok(groupService.getDisciplinesByGroupId(id));
+    @DeleteMapping("/{groupId}/disciplines/{disciplineId}")
+    public ResponseEntity<GroupDisciplineDto> deleteDisciplineFromGroup(@PathVariable Long groupId, @PathVariable Long disciplineId) {
+        return ResponseEntity.ok(groupService.deleteDisciplineFromGroup(groupId, disciplineId));
     }
 }

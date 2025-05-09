@@ -1,5 +1,7 @@
 package com.example.queue.dto;
 
+import com.example.queue.model.Queue;
+import com.example.queue.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +24,13 @@ public class QueueUserDto {
     public QueueUserDto(QueueDto queueDto, UserDto userDto) {
         this.queueDto = queueDto;
         this.userDto = userDto;
+    }
+
+    public static QueueUserDto from(QueueDto queueDto, UserDto userDto) {
+        return new QueueUserDto(queueDto, userDto);
+    }
+
+    public static QueueUserDto from(Queue queue, User user) {
+        return new QueueUserDto(QueueDto.from(queue), UserDto.from(user));
     }
 }

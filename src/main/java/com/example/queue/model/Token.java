@@ -20,7 +20,7 @@ public class Token {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "logged_out")
+    @Column(name = "is_logged_out")
     private Boolean loggedOut;
 
     @ManyToOne @JoinColumn(name = "user_id")

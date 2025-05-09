@@ -3,14 +3,13 @@ package com.example.queue.controller;
 import com.example.queue.dto.QueueDto;
 import com.example.queue.dto.UserDto;
 import com.example.queue.service.UserService;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("users")
@@ -18,14 +17,29 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.loadUserDtoById(id));
+    @GetMapping("/")
+    public ResponseEntity<List<UserDto>> getAllUserDtoList() {
+        return ResponseEntity.ok(userService.getAllUserDtoList());
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok(userService.loadAllUserDtoList());
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserDtoById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserDtoById(id));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDto> updateUserById(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        return ResponseEntity.ok(userService.updateUserById(id, updates));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUserTotallyById(@PathVariable Long id, @RequestBody UserDto updates) {
+        return ResponseEntity.ok(userService.updateUserTotallyById(id, updates));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserDto> deleteUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.deleteUserById(id));
     }
 
     @GetMapping("/{id}/queues")

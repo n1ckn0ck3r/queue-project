@@ -29,4 +29,17 @@ public class DisciplineService {
     public DisciplineDto getDisciplineById(Long id) {
         return DisciplineDto.from(disciplineRepository.findById(id).orElseThrow(() -> new NotFoundException("Дисциплины с таким id не существует")));
     }
+
+    public DisciplineDto updateDisciplineById(Long id, DisciplineDto updates) {
+        Discipline discipline = disciplineRepository.findById(id).orElseThrow(() -> new NotFoundException("Дисциплины с таким id не существует"));
+        discipline.setDisciplineName(updates.getDisciplineName());
+        disciplineRepository.save(discipline);
+        return DisciplineDto.from(discipline);
+    }
+
+    public DisciplineDto deleteDisciplineById(Long id) {
+        Discipline discipline = disciplineRepository.findById(id).orElseThrow(() -> new NotFoundException("Дисциплины с таким id не существует"));
+        disciplineRepository.delete(discipline);
+        return DisciplineDto.from(discipline);
+    }
 }
