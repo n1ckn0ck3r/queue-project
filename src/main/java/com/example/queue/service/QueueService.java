@@ -41,6 +41,7 @@ public class QueueService {
         Queue queue = new Queue();
         queue.setActive(true);
         queue.setDiscipline(discipline);
+        queue.setQueueEnd(queueDto.getQueueEnd());
 
         queueRepository.save(queue);
 

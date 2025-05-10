@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +23,11 @@ public class QueueDto {
     private List<UserDto> users = new ArrayList<>();
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean active;
+    private OffsetDateTime queueStart;
+    private OffsetDateTime queueEnd;
 
     public static QueueDto from(Queue queue) {
-        return new QueueDto(queue.getId(), DisciplineDto.from(queue.getDiscipline()), UserDto.fromSet(queue.getUsers()), queue.getActive());
+        return new QueueDto(queue.getId(), DisciplineDto.from(queue.getDiscipline()), UserDto.fromSet(queue.getUsers()), queue.getActive(), queue.getQueueStart(), queue.getQueueEnd());
     }
 
     public static List<QueueDto> fromList(List<Queue> queues) {

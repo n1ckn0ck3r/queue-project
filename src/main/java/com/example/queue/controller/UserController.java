@@ -17,9 +17,9 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<UserDto>> getAllUserDtoList() {
-        return ResponseEntity.ok(userService.getAllUserDtoList());
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getUserDtoList() {
+        return ResponseEntity.ok(userService.getUserDtoList());
     }
 
     @GetMapping("/{id}")

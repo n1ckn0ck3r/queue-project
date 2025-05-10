@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
        return UserDto.from(loadUserById(id));
    }
 
-   public List<UserDto> getAllUserDtoList() {
+   public List<UserDto> getUserDtoList() {
        return UserDto.fromList(userRepository.findAll());
    }
 
@@ -88,5 +88,4 @@ public class UserService implements UserDetailsService {
     public List<QueueDto> getQueuesByUserId(Long id) {
         return QueueDto.fromSet(loadUserById(id).getQueues());
     }
-
 }

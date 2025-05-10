@@ -18,12 +18,12 @@ import java.util.Map;
 public class QueueController {
     private final QueueService queueService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<QueueDto>> getQueues() {
         return ResponseEntity.ok(queueService.getQueues());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<QueueDto> addQueue(@RequestBody QueueDto queueDto) {
         return ResponseEntity.ok(queueService.addQueue(queueDto));
     }

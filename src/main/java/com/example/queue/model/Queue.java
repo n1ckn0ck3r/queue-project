@@ -3,6 +3,7 @@ package com.example.queue.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,4 +27,10 @@ public class Queue {
 
     @Column(name = "is_active")
     private Boolean active;
+
+    @Column(name = "queue_start")
+    private OffsetDateTime queueStart;
+
+    @Column(name = "queue_end")
+    private OffsetDateTime queueEnd;
 }

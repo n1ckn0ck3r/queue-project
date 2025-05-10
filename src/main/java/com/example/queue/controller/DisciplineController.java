@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class DisciplineController {
     private final DisciplineService disciplineService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<DisciplineDto> addDiscipline(@RequestBody DisciplineDto disciplineDto) {
         return ResponseEntity.ok(disciplineService.addDiscipline(disciplineDto));
     }

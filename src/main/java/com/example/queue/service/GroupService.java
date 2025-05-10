@@ -3,7 +3,6 @@ package com.example.queue.service;
 import com.example.queue.dto.DisciplineDto;
 import com.example.queue.dto.GroupDisciplineDto;
 import com.example.queue.dto.GroupDto;
-import com.example.queue.dto.UserDto;
 import com.example.queue.exception.BadRequestException;
 import com.example.queue.exception.ConflictException;
 import com.example.queue.exception.NotFoundException;

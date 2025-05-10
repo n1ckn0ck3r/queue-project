@@ -17,7 +17,7 @@ import java.util.List;
 public class GroupController {
     private final GroupService groupService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<GroupDto> addGroup(@RequestBody GroupDto groupDto) {
         return ResponseEntity.ok(groupService.addGroup(groupDto));
     }
