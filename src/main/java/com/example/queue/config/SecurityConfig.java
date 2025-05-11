@@ -6,6 +6,7 @@ import com.example.queue.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,8 +32,13 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> {
             auth
                     .requestMatchers("/login/**", "/register/**", "/refresh_token/**", "/").permitAll()
-                    .requestMatchers("/admin/**").hasAuthority("ADMIN")
                     .requestMatchers("/hello/**").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/users/**", "/groups/**", "/disciplines/**", "/queues/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/users/**", "/groups/**", "/disciplines/**", "/queues/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/users/**", "/groups/**", "/disciplines/**", "/queues/**").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/users/**", "/groups/**", "/disciplines/**", "/queues/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/users/**", "/groups/**", "/disciplines/**", "/queues/**").hasAuthority("ADMIN")
+                    .requestMatchers("/admin/**").hasAuthority("ADMIN")
                     .anyRequest().permitAll();
         })
                 .userDetailsService(userService)

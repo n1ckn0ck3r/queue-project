@@ -3,7 +3,6 @@ package com.example.queue.controller;
 import com.example.queue.dto.QueueDto;
 import com.example.queue.dto.UserDto;
 import com.example.queue.service.UserService;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
