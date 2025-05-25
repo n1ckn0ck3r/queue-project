@@ -23,6 +23,9 @@ const Layout = () => {
               <>
                 <Link to="/queues">Queues</Link>
                 <Link to="/profile">Profile</Link>
+                {user && user.role === 'ADMIN' && (
+                  <Link to="/admin">Admin Panel</Link>
+                )}
                 <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
               </>
             ) : (
@@ -34,13 +37,13 @@ const Layout = () => {
           </nav>
         </div>
       </header>
-      
+
       <main className="main-content">
         <div className="container">
           <Outlet />
         </div>
       </main>
-      
+
       <footer className="footer">
         <div className="container text-center">
           <p>&copy; {new Date().getFullYear()} Queue System. All rights reserved.</p>

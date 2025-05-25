@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import QueueListPage from './pages/QueueListPage';
 import QueueDetailPage from './pages/QueueDetailPage';
 import ProfilePage from './pages/ProfilePage';
+import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -21,14 +22,15 @@ function App() {
         <Route index element={isAuthenticated ? <Navigate to="/queues" /> : <LoginPage />} />
         <Route path="login" element={isAuthenticated ? <Navigate to="/queues" /> : <LoginPage />} />
         <Route path="register" element={isAuthenticated ? <Navigate to="/queues" /> : <RegisterPage />} />
-        
+
         {/* Protected routes */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
           <Route path="queues" element={<QueueListPage />} />
           <Route path="queues/:id" element={<QueueDetailPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="admin" element={<AdminPage />} />
         </Route>
-        
+
         {/* 404 route */}
         <Route path="*" element={<NotFoundPage />} />
       </Route>

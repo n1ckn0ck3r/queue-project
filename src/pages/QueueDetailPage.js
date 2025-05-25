@@ -19,7 +19,7 @@ const QueueDetailPage = () => {
   const { currentQueue, queueUsers, isLoading, error } = useSelector((state) => state.queue);
   const { modal } = useSelector((state) => state.ui);
   const { user } = useSelector((state) => state.auth);
-  
+
   useEffect(() => {
     dispatch(resetQueueState());
     dispatch(fetchQueueById(id));
@@ -132,10 +132,10 @@ const QueueDetailPage = () => {
             <p>No users in this queue.</p>
           ) : (
             <ul className="user-list">
-              {queueUsers.map((user, index) => (
+              {[...queueUsers].reverse().map((user, index) => (
                 <li key={user.id} className="user-item">
                   <div>
-                    <span className="mr-2">{index + 1}.</span>
+                    <span className="mr-2">{queueUsers.length - index}.</span>
                     {user.username}
                   </div>
                   <div>{user.email}</div>
