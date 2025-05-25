@@ -37,11 +37,6 @@ public class GroupController {
         return ResponseEntity.ok(groupService.deleteGroupById(id));
     }
 
-    @GetMapping("/{id}/disciplines")
-    public ResponseEntity<List<DisciplineDto>> getDisciplinesByGroupId(@PathVariable Long id) {
-        return ResponseEntity.ok(groupService.getDisciplinesByGroupId(id));
-    }
-
     @PostMapping("/{id}/users")
     public ResponseEntity<GroupDto> addUsersToGroup(@PathVariable Long id, @RequestBody ListDataDto<Long> userIds) {
         return ResponseEntity.ok(groupService.addUsersToGroup(id, userIds.getData()));
@@ -50,6 +45,11 @@ public class GroupController {
     @DeleteMapping("/{id}/users")
     public ResponseEntity<GroupDto> deleteUsersFromGroup(@PathVariable Long id, @RequestBody ListDataDto<Long> userIds) {
         return ResponseEntity.ok(groupService.deleteUsersFromGroup(id, userIds.getData()));
+    }
+
+    @GetMapping("/{id}/disciplines")
+    public ResponseEntity<List<DisciplineDto>> getDisciplinesByGroupId(@PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getDisciplinesByGroupId(id));
     }
 
     @PostMapping("/{id}/disciplines")
