@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,11 +21,9 @@ public class Queue {
     @ManyToOne @JoinColumn(name = "discipline_id") @ToString.Exclude @EqualsAndHashCode.Exclude
     private Discipline discipline;
 
-    @ManyToMany @JoinTable(
-            name = "queue_users",
-            joinColumns = @JoinColumn(name = "queue_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")) @ToString.Exclude @EqualsAndHashCode.Exclude
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "queue", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private List<QueueUser> queueUsers = new ArrayList<>();
 
     @Column(name = "is_active")
     private Boolean active;
@@ -33,4 +33,21 @@ public class Queue {
 
     @Column(name = "queue_end")
     private OffsetDateTime queueEnd;
+
+    public Set<User> getUsers() {
+        Set<User> users = new HashSet<>();
+        for (QueueUser queueUser : queueUsers) {
+            users.add(queueUser.getUser());
+        }
+        return users;
+    }
+
+    public void addUser(User user) {
+        QueueUser queueUser = new QueueUser(this, user);
+        queueUsers.add(queueUser);
+    }
+
+    public void removeUser(User user) {
+        queueUsers.removeIf(queueUser -> queueUser.getUser().equals(user));
+    }
 }

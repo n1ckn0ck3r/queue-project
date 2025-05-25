@@ -5,22 +5,30 @@ import com.example.queue.dto.QueueUserDto;
 import com.example.queue.dto.UserDto;
 import com.example.queue.exception.BadRequestException;
 import com.example.queue.exception.ConflictException;
+import com.example.queue.exception.ForbiddenException;
 import com.example.queue.exception.NotFoundException;
 import com.example.queue.model.Discipline;
 import com.example.queue.model.Queue;
+import com.example.queue.model.QueueUser;
+import com.example.queue.model.Role;
 import com.example.queue.model.User;
 import com.example.queue.repository.DisciplineRepository;
 import com.example.queue.repository.QueueRepository;
+import com.example.queue.repository.QueueUserRepository;
 import com.example.queue.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,6 +37,7 @@ public class QueueService {
     private final QueueRepository queueRepository;
     private final DisciplineRepository disciplineRepository;
     private final UserRepository userRepository;
+    private final QueueUserRepository queueUserRepository;
     private final ObjectMapper objectMapper;
 
     public List<QueueDto> getQueues() {
@@ -64,14 +73,28 @@ public class QueueService {
     }
 
     public QueueDto deleteQueueById(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new ForbiddenException("Только администратор может удалять очереди");
+        }
+
         Queue queue = queueRepository.findById(id).orElseThrow(() -> new NotFoundException("Очередь с таким id не найдена"));
+
+        // Delete all queue-user relationships first
+        queueUserRepository.deleteByQueue(queue);
+
         queueRepository.delete(queue);
         return QueueDto.from(queue);
     }
 
     public List<UserDto> getUsersByQueueId(Long id) {
         Queue queue = queueRepository.findById(id).orElseThrow(() -> new NotFoundException("Очередь с таким id не найдена"));
-        return UserDto.fromSet(queue.getUsers());
+        List<QueueUser> queueUsers = queueUserRepository.findByQueueOrderByJoinTimeAsc(queue);
+        return queueUsers.stream()
+                .map(queueUser -> UserDto.from(queueUser.getUser()))
+                .collect(Collectors.toList());
     }
 
     public List<QueueUserDto> addUsersToQueue(Long id, List<Long> userIds) {
@@ -82,12 +105,11 @@ public class QueueService {
             if (queue.getUsers().contains(user)) {
                 throw new ConflictException("Этот пользователь уже добавлен в очередь");
             }
-            user.getQueues().add(queue);
-            queue.getUsers().add(user);
-            dtoList.add(QueueUserDto.from(queue, user));
+            QueueUser queueUser = new QueueUser(queue, user);
+            queueUserRepository.save(queueUser);
+            dtoList.add(QueueUserDto.from(queueUser));
         }
 
-        queueRepository.save(queue);
         return dtoList;
     }
 
@@ -99,12 +121,13 @@ public class QueueService {
             if (!queue.getUsers().contains(user)) {
                 throw new BadRequestException("Этого пользователя и так нет в очереди");
             }
-            user.getQueues().remove(queue);
-            queue.getUsers().remove(user);
-            dtoList.add(QueueUserDto.from(queue, user));
+            QueueUser queueUser = queueUserRepository.findByQueueAndUser(queue, user)
+                    .orElseThrow(() -> new NotFoundException("Связь пользователя с очередью не найдена"));
+            QueueUserDto dto = QueueUserDto.from(queueUser);
+            queueUserRepository.delete(queueUser);
+            dtoList.add(dto);
         }
 
-        queueRepository.save(queue);
         return dtoList;
     }
 
@@ -116,21 +139,21 @@ public class QueueService {
             throw new ConflictException("Такой пользователь уже добавлен");
         }
 
-        queue.getUsers().add(user);
-        user.getQueues().add(queue);
-        queueRepository.save(queue);
+        QueueUser queueUser = new QueueUser(queue, user);
+        queueUserRepository.save(queueUser);
 
-        return QueueUserDto.from(queue, user);
+        return QueueUserDto.from(queueUser);
     }
 
     public QueueUserDto deleteUserFromQueue(Long queueId, Long userId) {
         Queue queue = queueRepository.findById(queueId).orElseThrow(() -> new NotFoundException("Очередь с таким id не найдена"));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
 
-        queue.getUsers().remove(user);
-        user.getQueues().remove(queue);
-        queueRepository.save(queue);
+        QueueUser queueUser = queueUserRepository.findByQueueAndUser(queue, user)
+                .orElseThrow(() -> new NotFoundException("Связь пользователя с очередью не найдена"));
+        QueueUserDto dto = QueueUserDto.from(queueUser);
+        queueUserRepository.delete(queueUser);
 
-        return QueueUserDto.from(queue, user);
+        return dto;
     }
 }

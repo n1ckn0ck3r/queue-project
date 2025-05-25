@@ -34,8 +34,17 @@ public class User implements UserDetails {
     @ManyToOne @JoinColumn(name = "group_id")
     private Group group;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Queue> queues = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private List<QueueUser> queueUsers = new ArrayList<>();
+
+    public Set<Queue> getQueues() {
+        Set<Queue> queues = new HashSet<>();
+        for (QueueUser queueUser : queueUsers) {
+            queues.add(queueUser.getQueue());
+        }
+        return queues;
+    }
 
     public User(String username, String email, String password) {
         this.username = username;
