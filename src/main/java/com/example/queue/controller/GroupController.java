@@ -10,12 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("groups")
 @RequiredArgsConstructor
 public class GroupController {
     private final GroupService groupService;
+
+    @GetMapping
+    public ResponseEntity<List<GroupDto>> getGroups() {
+        return ResponseEntity.ok(groupService.getGroups());
+    }
 
     @PostMapping
     public ResponseEntity<GroupDto> addGroup(@RequestBody GroupDto groupDto) {
@@ -27,9 +33,14 @@ public class GroupController {
         return ResponseEntity.ok(groupService.getGroupById(id));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<GroupDto> updateGroupById(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        return ResponseEntity.ok(groupService.updateGroupById(id, updates));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<GroupDto> updateGroupById(@PathVariable Long id, @RequestBody GroupDto groupDto) {
-        return ResponseEntity.ok(groupService.updateGroupById(id, groupDto));
+    public ResponseEntity<GroupDto> updateGroupTotallyById(@PathVariable Long id, @RequestBody GroupDto groupDto) {
+        return ResponseEntity.ok(groupService.updateGroupTotallyById(id, groupDto));
     }
 
     @DeleteMapping("/{id}")

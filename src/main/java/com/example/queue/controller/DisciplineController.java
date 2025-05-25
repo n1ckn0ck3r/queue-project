@@ -6,11 +6,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("disciplines")
 @RequiredArgsConstructor
 public class DisciplineController {
     private final DisciplineService disciplineService;
+
+    @GetMapping
+    public ResponseEntity<List<DisciplineDto>> getDisciplines() {
+        return ResponseEntity.ok(disciplineService.getDisciplines());
+    }
 
     @PostMapping
     public ResponseEntity<DisciplineDto> addDiscipline(@RequestBody DisciplineDto disciplineDto) {
@@ -24,7 +31,7 @@ public class DisciplineController {
 
     @PutMapping("/{id}")
     public ResponseEntity<DisciplineDto> updateDisciplineById(@PathVariable Long id, @RequestBody DisciplineDto updates) {
-        return ResponseEntity.ok(disciplineService.updateDisciplineById(id, updates));
+        return ResponseEntity.ok(disciplineService.updateDisciplineTotallyById(id, updates));
     }
 
     @DeleteMapping("/{id}")

@@ -41,7 +41,7 @@ public class SecurityConfig {
             auth
                     .requestMatchers("/login/**", "/register/**", "/refresh_token/**", "/").permitAll()
                     .requestMatchers("/hello/**").authenticated()
-                    .requestMatchers("/queues/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/queues/{id}").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/users/**", "/groups/**", "/disciplines/**").authenticated()
                     .requestMatchers(HttpMethod.PUT, "/users/**", "/groups/**", "/disciplines/**").authenticated()
                     .requestMatchers(HttpMethod.PATCH, "/users/**", "/groups/**", "/disciplines/**").authenticated()
