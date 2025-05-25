@@ -115,7 +115,7 @@ const ProfilePage = () => {
               <div key={queue.id} className="queue-card">
                 <h3 className="queue-title">{queue.name}</h3>
                 <p className="queue-info">
-                  <strong>Discipline:</strong> {queue.discipline?.name || 'N/A'}
+                  <strong>Discipline:</strong> {queue.discipline.disciplineName || 'N/A'}
                 </p>
                 <p className="queue-info">
                   <strong>Status:</strong> {queue.active ? 'Active' : 'Inactive'}

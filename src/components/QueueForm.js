@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createQueue, updateQueue } from '../store/slices/queueSlice';
+import { fetchDisciplines, resetAdminState } from '../store/slices/adminSlice';
 
 const QueueForm = ({ queue, onClose }) => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.queue);
+  const { disciplines } = useSelector((state) => state.admin);
+
+  const getLocalDateTime = (isoString) => {
+    return isoString.slice(0, 16);
+  }
+
   const [formData, setFormData] = useState({
-    name: '',
-    disciplineId: '',
-    active: true,
+    discipline: {
+      // id: 0,
+      disciplineName: ''
+    },
+    queueStart: getLocalDateTime(new Date().toISOString()),
+    queueEnd: getLocalDateTime(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()),
+    // active: true,
   });
   const [formErrors, setFormErrors] = useState({});
   
@@ -18,31 +29,60 @@ const QueueForm = ({ queue, onClose }) => {
   useEffect(() => {
     if (isEditMode && queue) {
       setFormData({
-        name: queue.name || '',
-        disciplineId: queue.discipline?.id || '',
-        active: queue.active !== undefined ? queue.active : true,
+        discipline: {
+          // id: queue.discipline.id,
+          disciplineName: queue.discipline.disciplineName
+        },
+        queueStart: getLocalDateTime(queue.queueStart),
+        queueEnd: getLocalDateTime(queue.queueEnd),
+        // active: queue.active !== undefined ? queue.active : true,
       });
     }
   }, [isEditMode, queue]);
+
+  useEffect(() => {
+    dispatch(resetAdminState());
+    dispatch(fetchDisciplines());
+  }, [dispatch]);
   
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
+    if (name === 'disciplineId') {
+      const selected = disciplines.find((d) => d.id === Number(value) || { id: 0, disciplineName: '' });
+      setFormData((prev) => ({
+        ...prev,
+        discipline: {
+          // id: selected.id,
+          disciplineName: selected.disciplineName,
+        },
+      }));
+    } else if (type === 'checkbox') {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+    console.log(formData)
   };
   
   const validateForm = () => {
     const errors = {};
     
-    if (!formData.name.trim()) {
-      errors.name = 'Queue name is required';
+    if (!formData.discipline.disciplineName) {
+      errors.discipline = 'Discipline is required';
     }
-    
-    if (!formData.disciplineId) {
-      errors.disciplineId = 'Discipline is required';
+
+    if (!formData.queueStart) {
+      errors.queueStart = 'Start time is required';
     }
+
+    if (!formData.queueEnd) {
+      errors.queueEnd = 'End time is required';
+    }
+
+    if (formData.queueStart && formData.queueEnd 
+      && new Date(formData.queueStart) >= new Date(formData.queueEnd)) {
+        errors.queueEnd = 'End must be after start';
+      }
     
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -50,57 +90,66 @@ const QueueForm = ({ queue, onClose }) => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      if (isEditMode) {
-        dispatch(updateQueue({ id: queue.id, updates: formData }))
-          .then((result) => {
-            if (!result.error) {
-              onClose();
-            }
-          });
-      } else {
-        dispatch(createQueue(formData))
-          .then((result) => {
-            if (!result.error) {
-              onClose();
-            }
-          });
-      }
-    }
+    if (!validateForm()) return;
+
+    const payload = {
+      disciplineId: formData.discipline.id,
+      queueStart: new Date(formData.queueStart).toISOString(),
+      queueEnd: new Date(formData.queueEnd).toISOString(),
+      // active: formData.active,
+    };
+
+    const action = isEditMode 
+      ? updateQueue({ id: queue.id, updates: payload })
+      : createQueue(payload);
+
+    dispatch(action).then((res) => {
+      if (!res.error) onClose();
+    })
   };
   
   return (
     <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="name" className="form-label">Queue Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          className="form-input"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        {formErrors.name && <div className="form-error">{formErrors.name}</div>}
-      </div>
-      
       <div className="form-group">
         <label htmlFor="disciplineId" className="form-label">Discipline</label>
         <select
           id="disciplineId"
           name="disciplineId"
           className="form-input"
-          value={formData.disciplineId}
+          value={formData.discipline.id}
           onChange={handleChange}
         >
           <option value="">Select a discipline</option>
           {/* We would normally fetch disciplines from the API and map them here */}
-          <option value="1">Mathematics</option>
-          <option value="2">Physics</option>
-          <option value="3">Computer Science</option>
+          {disciplines.map((d) => <option key={d.id} value={d.id}>{d.disciplineName}</option>)}
         </select>
-        {formErrors.disciplineId && <div className="form-error">{formErrors.disciplineId}</div>}
+        {formErrors.discipline && <div className="form-error">{formErrors.discipline}</div>}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="queueStart" className="form-label">Queue Start</label>
+        <input 
+          type="datetime-local"
+          id="queueStart"
+          name="queueStart"
+          className="form-input"
+          value={formData.queueStart}
+          onChange={handleChange}
+        />
+          {formErrors.queueStart && <div className="form-error">{formErrors.queueStart}</div>}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="queueEnd" className="form-label">Queue End</label>
+        <input 
+          type="datetime-local"
+          id="queueEnd"
+          name="queueEnd"
+          className="form-input"
+          value={formData.queueEnd}
+          onChange={handleChange}
+        />
+          {formErrors.queueEnd && <div className="form-error">{formErrors.queueEnd}</div>}
       </div>
       
       <div className="form-group">
