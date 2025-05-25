@@ -3,6 +3,7 @@ package com.example.queue.service;
 import com.example.queue.dto.AuthenticationResponseDto;
 import com.example.queue.dto.LoginRequestDto;
 import com.example.queue.dto.RegistrationRequestDto;
+import com.example.queue.dto.UserDto;
 import com.example.queue.exception.BadRequestException;
 import com.example.queue.exception.UnauthorizedException;
 import com.example.queue.model.Token;
@@ -51,7 +52,7 @@ public class AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(accessToken, refreshToken, user);
 
-        return new AuthenticationResponseDto(accessToken, refreshToken);
+        return new AuthenticationResponseDto(accessToken, refreshToken, UserDto.from(user));
     }
 
     private void revokeAllToken(User user) {
@@ -91,7 +92,7 @@ public class AuthenticationService {
         revokeAllToken(user);
         saveUserToken(accessToken, refreshToken, user);
 
-        return new AuthenticationResponseDto(accessToken, refreshToken);
+        return new AuthenticationResponseDto(accessToken, refreshToken, UserDto.from(user));
     }
 
     public AuthenticationResponseDto refreshToken(
@@ -115,7 +116,7 @@ public class AuthenticationService {
             revokeAllToken(user);
             saveUserToken(accessToken, refreshToken, user);
 
-            return new AuthenticationResponseDto(accessToken, refreshToken);
+            return new AuthenticationResponseDto(accessToken, refreshToken, UserDto.from(user));
         }
 
         throw new UnauthorizedException("Попытка  неавторизованного доступа");
