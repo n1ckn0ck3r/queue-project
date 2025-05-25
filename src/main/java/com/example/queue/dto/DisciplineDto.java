@@ -22,6 +22,10 @@ public class DisciplineDto {
         return new DisciplineDto(discipline.getId(), discipline.getDisciplineName());
     }
 
+    public static List<DisciplineDto> fromList(List<Discipline> disciplines) {
+        return disciplines.stream().map(DisciplineDto::from).collect(Collectors.toList());
+    }
+
     public static List<DisciplineDto> fromSet(Set<Discipline> disciplines) {
         return disciplines.stream().map(DisciplineDto::from).collect(Collectors.toList());
     }

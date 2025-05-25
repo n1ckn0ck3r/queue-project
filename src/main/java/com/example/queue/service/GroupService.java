@@ -12,12 +12,15 @@ import com.example.queue.model.User;
 import com.example.queue.repository.DisciplineRepository;
 import com.example.queue.repository.GroupRepository;
 import com.example.queue.repository.UserRepository;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -26,6 +29,11 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final DisciplineRepository disciplineRepository;
+    private final ObjectMapper objectMapper;
+
+    public List<GroupDto> getGroups() {
+        return GroupDto.fromList(groupRepository.findAll());
+    }
 
     public GroupDto addGroup(GroupDto groupDto) {
         if (groupRepository.findByGroupName(groupDto.getGroupName()).isPresent()) {
@@ -42,7 +50,20 @@ public class GroupService {
         return GroupDto.from(groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Группы с таким id не найдено")));
     }
 
-    public GroupDto updateGroupById(Long id, GroupDto groupDto) {
+    public GroupDto updateGroupById(Long id, Map<String, Object> updates) {
+        Group group = groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Группа с таким id не найдена"));
+
+        try {
+            objectMapper.updateValue(group, updates);
+        } catch (JsonMappingException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
+        groupRepository.save(group);
+        return GroupDto.from(group);
+    }
+
+    public GroupDto updateGroupTotallyById(Long id, GroupDto groupDto) {
         Group group = groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Группа с таким id не найдена"));
         group.setGroupName(groupDto.getGroupName());
         groupRepository.save(group);

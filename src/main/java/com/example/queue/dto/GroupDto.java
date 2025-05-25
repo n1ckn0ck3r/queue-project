@@ -25,6 +25,10 @@ public class GroupDto {
         return new GroupDto(group.getId(), group.getGroupName(), UserDto.fromList(group.getUsers()));
     }
 
+    public static List<GroupDto> fromList(List<Group> groups) {
+        return groups.stream().map(GroupDto::from).collect(Collectors.toList());
+    }
+
     public static List<GroupDto> fromSet(Set<Group> groups) {
         return groups.stream().map(GroupDto::from).collect(Collectors.toList());
     }
