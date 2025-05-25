@@ -1,0 +1,46 @@
+import api from './api';
+
+const authService = {
+  register: async (userData) => {
+    const response = await api.post('/register', userData);
+    if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+    }
+    return response.data;
+  },
+
+  login: async (credentials) => {
+    const response = await api.post('/login', credentials);
+    if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+    }
+    return response.data;
+  },
+
+  logout: async () => {
+    localStorage.removeItem('user');
+    return { success: true };
+  },
+
+  refreshToken: async () => {
+    const response = await api.post('/refresh_token');
+    if (response.data) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const updatedUser = { ...user, ...response.data };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      return updatedUser;
+    }
+    return response.data;
+  },
+
+  getCurrentUser: () => {
+    return JSON.parse(localStorage.getItem('user'));
+  },
+
+  isAuthenticated: () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return !!user;
+  },
+};
+
+export default authService;
