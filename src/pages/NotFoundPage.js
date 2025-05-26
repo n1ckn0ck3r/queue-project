@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 const NotFoundPage = () => {
   return (
     <div className="text-center">
-      <h1>404 - Page Not Found</h1>
-      <p className="mb-4">The page you are looking for does not exist.</p>
+      <h1>404 - Страница не найдена</h1>
+      <p className="mb-4">Страница, которую вы ищете, не существует.</p>
       <Link to="/" className="btn btn-primary">
-        Go to Home
+        На главную
       </Link>
     </div>
   );

@@ -60,7 +60,7 @@ const AdminPage = () => {
   };
 
   const handleDeleteGroup = (id) => {
-    if (window.confirm('Are you sure you want to delete this group?')) {
+    if (window.confirm('Вы уверены, что хотите удалить эту группу?')) {
       dispatch(deleteGroup(id));
     }
   };
@@ -92,7 +92,7 @@ const AdminPage = () => {
   };
 
   const handleDeleteDiscipline = (id) => {
-    if (window.confirm('Are you sure you want to delete this discipline?')) {
+    if (window.confirm('Вы уверены, что хотите удалить эту дисциплину?')) {
       dispatch(deleteDiscipline(id));
     }
   };
@@ -116,11 +116,11 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page">
-      <h1>Admin Panel</h1>
+      <h1>Панель Администратора</h1>
 
       {error && (
         <div className="alert alert-error">
-          {error.message || 'An error occurred. Please try again.'}
+          {error.message || 'Произошла ошибка. Пожалуйста, попробуйте снова.'}
         </div>
       )}
 
@@ -129,24 +129,24 @@ const AdminPage = () => {
           className={`tab-button ${activeTab === 'groups' ? 'active' : ''}`} 
           onClick={() => handleTabChange('groups')}
         >
-          Groups
+          Группы
         </button>
         <button 
           className={`tab-button ${activeTab === 'disciplines' ? 'active' : ''}`} 
           onClick={() => handleTabChange('disciplines')}
         >
-          Disciplines
+          Дисциплины
         </button>
       </div>
 
       <div className="tab-content">
         {activeTab === 'groups' ? (
           <div className="groups-tab">
-            <h2>Manage Groups</h2>
+            <h2>Управление группами</h2>
 
             <form onSubmit={handleGroupSubmit} className="admin-form">
               <div className="form-group">
-                <label htmlFor="groupName">Group Name</label>
+                <label htmlFor="groupName">Название группы</label>
                 <input
                   type="text"
                   id="groupName"
@@ -158,20 +158,20 @@ const AdminPage = () => {
               </div>
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary">
-                  {editingId ? 'Update Group' : 'Add Group'}
+                  {editingId ? 'Обновить группу' : 'Добавить группу'}
                 </button>
                 {editingId && (
                   <button type="button" className="btn btn-secondary" onClick={handleCancelEdit}>
-                    Cancel
+                    Отмена
                   </button>
                 )}
               </div>
             </form>
 
             <div className="item-list">
-              <h3>Groups List</h3>
+              <h3>Список групп</h3>
               {groups.length === 0 ? (
-                <p>No groups found.</p>
+                <p>Группы не найдены.</p>
               ) : (
                 <ul>
                   {groups.map((group) => (
@@ -182,13 +182,13 @@ const AdminPage = () => {
                           className="btn btn-sm btn-secondary"
                           onClick={() => handleEditGroup(group)}
                         >
-                          Edit
+                          Изменить
                         </button>
                         <button 
                           className="btn btn-sm btn-danger"
                           onClick={() => handleDeleteGroup(group.id)}
                         >
-                          Delete
+                          Удалить
                         </button>
                       </div>
                     </li>
@@ -199,11 +199,11 @@ const AdminPage = () => {
           </div>
         ) : (
           <div className="disciplines-tab">
-            <h2>Manage Disciplines</h2>
+            <h2>Управление дисциплинами</h2>
 
             <form onSubmit={handleDisciplineSubmit} className="admin-form">
               <div className="form-group">
-                <label htmlFor="disciplineName">Discipline Name</label>
+                <label htmlFor="disciplineName">Название дисциплины</label>
                 <input
                   type="text"
                   id="disciplineName"
@@ -215,20 +215,20 @@ const AdminPage = () => {
               </div>
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary">
-                  {editingId ? 'Update Discipline' : 'Add Discipline'}
+                  {editingId ? 'Обновить дисциплину' : 'Добавить дисциплину'}
                 </button>
                 {editingId && (
                   <button type="button" className="btn btn-secondary" onClick={handleCancelEdit}>
-                    Cancel
+                    Отмена
                   </button>
                 )}
               </div>
             </form>
 
             <div className="item-list">
-              <h3>Disciplines List</h3>
+              <h3>Список дисциплин</h3>
               {disciplines.length === 0 ? (
-                <p>No disciplines found.</p>
+                <p>Дисциплины не найдены.</p>
               ) : (
                 <ul>
                   {disciplines.map((discipline) => (
@@ -239,13 +239,13 @@ const AdminPage = () => {
                           className="btn btn-sm btn-secondary"
                           onClick={() => handleEditDiscipline(discipline)}
                         >
-                          Edit
+                          Изменить
                         </button>
                         <button 
                           className="btn btn-sm btn-danger"
                           onClick={() => handleDeleteDiscipline(discipline.id)}
                         >
-                          Delete
+                          Удалить
                         </button>
                       </div>
                     </li>

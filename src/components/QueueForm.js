@@ -65,20 +65,20 @@ const QueueForm = ({ queue, onClose }) => {
     const errors = {};
 
     if (!formData.discipline.disciplineName) {
-      errors.discipline = 'Discipline is required';
+      errors.discipline = 'Дисциплина обязательна';
     }
 
     if (!formData.queueStart) {
-      errors.queueStart = 'Start time is required';
+      errors.queueStart = 'Время начала обязательно';
     }
 
     if (!formData.queueEnd) {
-      errors.queueEnd = 'End time is required';
+      errors.queueEnd = 'Время окончания обязательно';
     }
 
     if (formData.queueStart && formData.queueEnd 
       && new Date(formData.queueStart) >= new Date(formData.queueEnd)) {
-        errors.queueEnd = 'End must be after start';
+        errors.queueEnd = 'Время окончания должно быть позже времени начала';
       }
 
     setFormErrors(errors);
@@ -108,7 +108,7 @@ const QueueForm = ({ queue, onClose }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="disciplineId" className="form-label">Discipline</label>
+        <label htmlFor="disciplineId" className="form-label">Дисциплина</label>
         <select
           id="disciplineId"
           name="disciplineId"
@@ -116,7 +116,7 @@ const QueueForm = ({ queue, onClose }) => {
           value={formData.discipline.id}
           onChange={handleChange}
         >
-          <option value="">Select a discipline</option>
+          <option value="">Выберите дисциплину</option>
           {/* We would normally fetch disciplines from the API and map them here */}
           {disciplines.map((d) => <option key={d.id} value={d.id}>{d.disciplineName}</option>)}
         </select>
@@ -124,7 +124,7 @@ const QueueForm = ({ queue, onClose }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="queueStart" className="form-label">Queue Start</label>
+        <label htmlFor="queueStart" className="form-label">Начало очереди</label>
         <input 
           type="datetime-local"
           id="queueStart"
@@ -137,7 +137,7 @@ const QueueForm = ({ queue, onClose }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="queueEnd" className="form-label">Queue End</label>
+        <label htmlFor="queueEnd" className="form-label">Окончание очереди</label>
         <input 
           type="datetime-local"
           id="queueEnd"
@@ -152,7 +152,7 @@ const QueueForm = ({ queue, onClose }) => {
 
       <div className="form-group">
         <button type="submit" className="form-button" disabled={isLoading}>
-          {isLoading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Queue' : 'Create Queue')}
+          {isLoading ? (isEditMode ? 'Обновление...' : 'Создание...') : (isEditMode ? 'Обновить очередь' : 'Создать очередь')}
         </button>
       </div>
     </form>

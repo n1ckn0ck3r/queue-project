@@ -43,7 +43,7 @@ const QueueDetailPage = () => {
   };
 
   const handleDeleteQueue = () => {
-    if (window.confirm('Are you sure you want to delete this queue?')) {
+    if (window.confirm('Вы уверены, что хотите удалить эту очередь?')) {
       dispatch(deleteQueue(id))
         .then(() => {
           navigate('/queues');
@@ -70,7 +70,7 @@ const QueueDetailPage = () => {
   if (error) {
     return (
       <div className="alert alert-error">
-        {error.message || 'Failed to load queue details. Please try again.'}
+        {error.message || 'Не удалось загрузить детали очереди. Пожалуйста, попробуйте снова.'}
       </div>
     );
   }
@@ -78,7 +78,7 @@ const QueueDetailPage = () => {
   if (!currentQueue) {
     return (
       <div className="alert alert-error">
-        Queue not found.
+        Очередь не найдена.
       </div>
     );
   }
@@ -87,25 +87,25 @@ const QueueDetailPage = () => {
     <div>
       <div className="mb-4">
         <Link to="/queues" className="btn btn-secondary mb-3">
-          &larr; Back to Queues
+          &larr; Назад к очередям
         </Link>
         <div className="d-flex justify-content-between align-items-center">
           <h1>{currentQueue.name}</h1>
           <div>
             {!isUserInQueue() ? (
               <button className="btn btn-primary mr-2" onClick={handleJoinQueue}>
-                Join Queue
+                Присоединиться к очереди
               </button>
             ) : (
               <button className="btn btn-danger mr-2" onClick={handleLeaveQueue}>
-                Leave Queue
+                Покинуть очередь
               </button>
             )}
             <button className="btn btn-secondary mr-2" onClick={handleEditQueue}>
-              Edit
+              Редактировать
             </button>
             <button className="btn btn-danger" onClick={handleDeleteQueue}>
-              Delete
+              Удалить
             </button>
           </div>
         </div>
@@ -113,17 +113,17 @@ const QueueDetailPage = () => {
 
       <div className="queue-detail">
         <div className="mb-4">
-          <h3>Queue Information</h3>
-          <p><strong>Discipline:</strong> {currentQueue.discipline.disciplineName || 'N/A'}</p>
-          <p><strong>Status:</strong> {currentQueue.active ? 'Active' : 'Inactive'}</p>
-          <p><strong>Created:</strong> {new Date(currentQueue.queueStart).toLocaleString("ru-RU")}</p>
-          <p><strong>Ends:</strong> {new Date(currentQueue.queueEnd).toLocaleString("ru-RU")}</p>
+          <h3>Информация об очереди</h3>
+          <p><strong>Дисциплина:</strong> {currentQueue.discipline.disciplineName || 'Н/Д'}</p>
+          <p><strong>Статус:</strong> {currentQueue.active ? 'Активна' : 'Неактивна'}</p>
+          <p><strong>Создана:</strong> {new Date(currentQueue.queueStart).toLocaleString("ru-RU")}</p>
+          <p><strong>Заканчивается:</strong> {new Date(currentQueue.queueEnd).toLocaleString("ru-RU")}</p>
         </div>
 
         <div className="queue-users">
-          <h3>Users in Queue ({queueUsers.length})</h3>
+          <h3>Пользователи в очереди ({queueUsers.length})</h3>
           {queueUsers.length === 0 ? (
-            <p>No users in this queue.</p>
+            <p>В этой очереди нет пользователей.</p>
           ) : (
             <ul className="user-list">
               {queueUsers.map((user, index) => (
@@ -144,7 +144,7 @@ const QueueDetailPage = () => {
         <div className="modal-backdrop">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Edit Queue</h2>
+              <h2>Редактировать очередь</h2>
               <button className="modal-close" onClick={handleCloseModal}>
                 &times;
               </button>

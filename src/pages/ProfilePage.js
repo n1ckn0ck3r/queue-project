@@ -18,7 +18,7 @@ const ProfilePage = () => {
     username: '',
     email: '',
   });
-  
+
   useEffect(() => {
     if (user) {
       dispatch(resetProfileState());
@@ -71,7 +71,7 @@ const ProfilePage = () => {
   if (error) {
     return (
       <div className="alert alert-error">
-        {error.message || 'Failed to load profile. Please try again.'}
+        {error.message || 'Не удалось загрузить профиль. Пожалуйста, попробуйте снова.'}
       </div>
     );
   }
@@ -79,35 +79,35 @@ const ProfilePage = () => {
   if (!profile) {
     return (
       <div className="alert alert-error">
-        Profile not found.
+        Профиль не найден.
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="mb-4">My Profile</h1>
-      
+      <h1 className="mb-4">Мой профиль</h1>
+
       <div className="queue-detail mb-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h3>Profile Information</h3>
+          <h3>Информация профиля</h3>
           <button className="btn btn-secondary" onClick={handleEditProfile}>
-            Edit Profile
+            Редактировать профиль
           </button>
         </div>
-        
+
         <div className="mb-3">
-          <p><strong>Username:</strong> {profile.username}</p>
+          <p><strong>Имя пользователя:</strong> {profile.username}</p>
           <p><strong>Email:</strong> {profile.email}</p>
         </div>
       </div>
-      
+
       <div className="queue-detail">
-        <h3 className="mb-3">My Queues</h3>
-        
+        <h3 className="mb-3">Мои очереди</h3>
+
         {userQueues.length === 0 ? (
           <div className="alert alert-info">
-            You are not in any queues. <Link to="/queues">Browse queues</Link> to join one.
+            Вы не состоите ни в одной очереди. <Link to="/queues">Просмотрите очереди</Link>, чтобы присоединиться.
           </div>
         ) : (
           <div className="queue-list">
@@ -115,14 +115,14 @@ const ProfilePage = () => {
               <div key={queue.id} className="queue-card">
                 <h3 className="queue-title">{queue.name}</h3>
                 <p className="queue-info">
-                  <strong>Discipline:</strong> {queue.discipline.disciplineName || 'N/A'}
+                  <strong>Дисциплина:</strong> {queue.discipline.disciplineName || 'Н/Д'}
                 </p>
                 <p className="queue-info">
-                  <strong>Status:</strong> {queue.active ? 'Active' : 'Inactive'}
+                  <strong>Статус:</strong> {queue.active ? 'Активна' : 'Неактивна'}
                 </p>
                 <div className="queue-actions">
                   <Link to={`/queues/${queue.id}`} className="btn btn-primary">
-                    View
+                    Просмотр
                   </Link>
                 </div>
               </div>
@@ -130,12 +130,12 @@ const ProfilePage = () => {
           </div>
         )}
       </div>
-      
+
       {modal.isOpen && modal.type === 'EDIT_PROFILE' && (
         <div className="modal-backdrop">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Edit Profile</h2>
+              <h2>Редактировать профиль</h2>
               <button className="modal-close" onClick={handleCloseModal}>
                 &times;
               </button>
@@ -143,7 +143,7 @@ const ProfilePage = () => {
             <div className="modal-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="username" className="form-label">Username</label>
+                  <label htmlFor="username" className="form-label">Имя пользователя</label>
                   <input
                     type="text"
                     id="username"
@@ -153,7 +153,7 @@ const ProfilePage = () => {
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="email" className="form-label">Email</label>
                   <input
@@ -165,10 +165,10 @@ const ProfilePage = () => {
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <button type="submit" className="form-button" disabled={isLoading}>
-                    {isLoading ? 'Saving...' : 'Save Changes'}
+                    {isLoading ? 'Сохранение...' : 'Сохранить изменения'}
                   </button>
                 </div>
               </form>

@@ -11,7 +11,7 @@ const RegisterPage = () => {
     confirmPassword: '',
   });
   const [formErrors, setFormErrors] = useState({});
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, error, isAuthenticated } = useSelector((state) => state.auth);
@@ -38,34 +38,34 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     const errors = {};
-    
+
     if (!formData.username) {
-      errors.usename = 'Username is required';
+      errors.usename = 'Имя пользователя обязательно';
     }
-    
+
     if (!formData.email) {
-      errors.email = 'Email is required';
+      errors.email = 'Email обязателен';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Email is invalid';
+      errors.email = 'Неверный формат email';
     }
-    
+
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = 'Пароль обязателен';
     } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = 'Пароль должен содержать не менее 6 символов';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+      errors.confirmPassword = 'Пароли не совпадают';
     }
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       // Remove confirmPassword before sending to API
       const { confirmPassword, ...registrationData } = formData;
@@ -75,17 +75,17 @@ const RegisterPage = () => {
 
   return (
     <div className="form-container">
-      <h2 className="form-title">Create an Account</h2>
-      
+      <h2 className="form-title">Создать аккаунт</h2>
+
       {error && (
         <div className="alert alert-error">
-          {error.message || 'Failed to register. Please try again.'}
+          {error.message || 'Не удалось зарегистрироваться. Пожалуйста, попробуйте снова.'}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>  
         <div className="form-group">
-          <label htmlFor="username" className="form-label">Username</label>
+          <label htmlFor="username" className="form-label">Имя пользователя</label>
           <input
             type="text"
             id="username"
@@ -96,7 +96,7 @@ const RegisterPage = () => {
           />
           {formErrors.username && <div className="form-error">{formErrors.username}</div>}
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="email" className="form-label">Email</label>
           <input
@@ -109,9 +109,9 @@ const RegisterPage = () => {
           />
           {formErrors.email && <div className="form-error">{formErrors.email}</div>}
         </div>
-        
+
         <div className="form-group">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label htmlFor="password" className="form-label">Пароль</label>
           <input
             type="password"
             id="password"
@@ -122,9 +122,9 @@ const RegisterPage = () => {
           />
           {formErrors.password && <div className="form-error">{formErrors.password}</div>}
         </div>
-        
+
         <div className="form-group">
-          <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+          <label htmlFor="confirmPassword" className="form-label">Подтверждение пароля</label>
           <input
             type="password"
             id="confirmPassword"
@@ -135,14 +135,14 @@ const RegisterPage = () => {
           />
           {formErrors.confirmPassword && <div className="form-error">{formErrors.confirmPassword}</div>}
         </div>
-        
+
         <button type="submit" className="form-button" disabled={isLoading}>
-          {isLoading ? 'Registering...' : 'Register'}
+          {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
         </button>
       </form>
-      
+
       <div className="mt-3 text-center">
-        <p>Already have an account? <Link to="/login">Login here</Link></p>
+        <p>Уже есть аккаунт? <Link to="/login">Войти</Link></p>
       </div>
     </div>
   );
