@@ -28,19 +28,13 @@ const QueueDetailPage = () => {
 
   const handleJoinQueue = () => {
     if (user && currentQueue) {
-      dispatch(addUserToQueue({ queueId: currentQueue.id, userId: user.id }))
-        .then(() => {
-          dispatch(fetchQueueUsers(id));
-        });
+      dispatch(addUserToQueue({ queueId: currentQueue.id, userId: user.id }));
     }
   };
 
   const handleLeaveQueue = () => {
     if (user && currentQueue) {
-      dispatch(removeUserFromQueue({ queueId: currentQueue.id, userId: user.id }))
-        .then(() => {
-          dispatch(fetchQueueUsers(id));
-        });
+      dispatch(removeUserFromQueue({ queueId: currentQueue.id, userId: user.id }));
     }
   };
 
@@ -132,10 +126,10 @@ const QueueDetailPage = () => {
             <p>No users in this queue.</p>
           ) : (
             <ul className="user-list">
-              {[...queueUsers].reverse().map((user, index) => (
+              {queueUsers.map((user, index) => (
                 <li key={user.id} className="user-item">
                   <div>
-                    <span className="mr-2">{queueUsers.length - index}.</span>
+                    <span className="mr-2">{index + 1}.</span>
                     {user.username}
                   </div>
                   <div>{user.email}</div>

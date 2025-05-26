@@ -208,9 +208,9 @@ const queueSlice = createSlice({
       .addCase(addUserToQueue.fulfilled, (state, action) => {
         state.isLoading = false;
         // Update queue users if we're viewing the queue that was updated
-        if (state.currentQueue && state.currentQueue.id === action.payload.queueId) {
-          // Refresh queue users (this is simplified, in a real app you might want to add the user to the list)
-          // For simplicity, we'll assume fetchQueueUsers will be called after this action
+        if (state.currentQueue && state.currentQueue.id === action.payload.queueId && action.payload.user) {
+          // Add the user to the queue users list
+          state.queueUsers.push(action.payload.user);
         }
       })
       .addCase(addUserToQueue.rejected, (state, action) => {
@@ -225,9 +225,9 @@ const queueSlice = createSlice({
       .addCase(removeUserFromQueue.fulfilled, (state, action) => {
         state.isLoading = false;
         // Update queue users if we're viewing the queue that was updated
-        if (state.currentQueue && state.currentQueue.id === action.payload.queueId) {
-          // Refresh queue users (this is simplified, in a real app you might want to remove the user from the list)
-          // For simplicity, we'll assume fetchQueueUsers will be called after this action
+        if (state.currentQueue && state.currentQueue.id === action.payload.queueId && action.payload.userId) {
+          // Remove the user from the queue users list
+          state.queueUsers = state.queueUsers.filter(user => user.id !== action.payload.userId);
         }
       })
       .addCase(removeUserFromQueue.rejected, (state, action) => {

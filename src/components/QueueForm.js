@@ -14,28 +14,26 @@ const QueueForm = ({ queue, onClose }) => {
 
   const [formData, setFormData] = useState({
     discipline: {
-      // id: 0,
+      id: 0,
       disciplineName: ''
     },
     queueStart: getLocalDateTime(new Date().toISOString()),
     queueEnd: getLocalDateTime(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()),
-    // active: true,
   });
   const [formErrors, setFormErrors] = useState({});
-  
+
   // If queue is provided, it's an edit operation
   const isEditMode = !!queue;
-  
+
   useEffect(() => {
     if (isEditMode && queue) {
       setFormData({
         discipline: {
-          // id: queue.discipline.id,
+          id: queue.discipline.id,
           disciplineName: queue.discipline.disciplineName
         },
         queueStart: getLocalDateTime(queue.queueStart),
         queueEnd: getLocalDateTime(queue.queueEnd),
-        // active: queue.active !== undefined ? queue.active : true,
       });
     }
   }, [isEditMode, queue]);
@@ -44,15 +42,15 @@ const QueueForm = ({ queue, onClose }) => {
     dispatch(resetAdminState());
     dispatch(fetchDisciplines());
   }, [dispatch]);
-  
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (name === 'disciplineId') {
-      const selected = disciplines.find((d) => d.id === Number(value) || { id: 0, disciplineName: '' });
+      const selected = disciplines.find((d) => d.id === Number(value)) || { id: 0, disciplineName: '' };
       setFormData((prev) => ({
         ...prev,
         discipline: {
-          // id: selected.id,
+          id: selected.id,
           disciplineName: selected.disciplineName,
         },
       }));
@@ -61,12 +59,11 @@ const QueueForm = ({ queue, onClose }) => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    console.log(formData)
   };
-  
+
   const validateForm = () => {
     const errors = {};
-    
+
     if (!formData.discipline.disciplineName) {
       errors.discipline = 'Discipline is required';
     }
@@ -83,11 +80,11 @@ const QueueForm = ({ queue, onClose }) => {
       && new Date(formData.queueStart) >= new Date(formData.queueEnd)) {
         errors.queueEnd = 'End must be after start';
       }
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -96,7 +93,7 @@ const QueueForm = ({ queue, onClose }) => {
       disciplineId: formData.discipline.id,
       queueStart: new Date(formData.queueStart).toISOString(),
       queueEnd: new Date(formData.queueEnd).toISOString(),
-      // active: formData.active,
+      active: true,
     };
 
     const action = isEditMode 
@@ -107,7 +104,7 @@ const QueueForm = ({ queue, onClose }) => {
       if (!res.error) onClose();
     })
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
@@ -151,19 +148,8 @@ const QueueForm = ({ queue, onClose }) => {
         />
           {formErrors.queueEnd && <div className="form-error">{formErrors.queueEnd}</div>}
       </div>
-      
-      <div className="form-group">
-        <label className="form-checkbox-label">
-          <input
-            type="checkbox"
-            name="active"
-            checked={formData.active}
-            onChange={handleChange}
-          />
-          <span className="ml-2">Active</span>
-        </label>
-      </div>
-      
+
+
       <div className="form-group">
         <button type="submit" className="form-button" disabled={isLoading}>
           {isLoading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Queue' : 'Create Queue')}
