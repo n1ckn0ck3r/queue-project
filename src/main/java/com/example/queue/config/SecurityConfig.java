@@ -40,13 +40,13 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> {
             auth
                     .requestMatchers("/login/**", "/register/**", "/refresh_token/**", "/").permitAll()
-                    .requestMatchers("/hello/**").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/queues/{id}").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/users/**", "/groups/**", "/disciplines/**").authenticated()
-                    .requestMatchers(HttpMethod.PUT, "/users/**", "/groups/**", "/disciplines/**").authenticated()
-                    .requestMatchers(HttpMethod.PATCH, "/users/**", "/groups/**", "/disciplines/**").authenticated()
-                    .requestMatchers(HttpMethod.POST, "/users/**", "/groups/**", "/disciplines/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/users/**", "/groups/**", "/disciplines/**").hasAuthority("ADMIN")
+//                    .requestMatchers("/hello/**").authenticated()
+//                    .requestMatchers(HttpMethod.DELETE, "/queues/{id}").hasAuthority("ADMIN")
+//                    .requestMatchers(HttpMethod.GET, "/users/**", "/groups/**", "/disciplines/**").authenticated()
+//                    .requestMatchers(HttpMethod.PUT, "/users/**", "/groups/**", "/disciplines/**").authenticated()
+//                    .requestMatchers(HttpMethod.PATCH, "/users/**", "/groups/**", "/disciplines/**").authenticated()
+//                    .requestMatchers(HttpMethod.POST, "/users/**", "/groups/**", "/disciplines/**").hasAuthority("ADMIN")
+//                    .requestMatchers(HttpMethod.DELETE, "/users/**", "/groups/**", "/disciplines/**").hasAuthority("ADMIN")
                     .requestMatchers("/admin/**").hasAuthority("ADMIN")
                     .anyRequest().permitAll();
         })

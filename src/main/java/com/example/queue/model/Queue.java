@@ -41,13 +41,4 @@ public class Queue {
         }
         return users;
     }
-
-    public void addUser(User user) {
-        QueueUser queueUser = new QueueUser(this, user);
-        queueUsers.add(queueUser);
-    }
-
-    public void removeUser(User user) {
-        queueUsers.removeIf(queueUser -> queueUser.getUser().equals(user));
-    }
 }

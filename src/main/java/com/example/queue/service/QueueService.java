@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -50,6 +51,7 @@ public class QueueService {
         Queue queue = new Queue();
         queue.setActive(true);
         queue.setDiscipline(discipline);
+        queue.setQueueStart(queueDto.getQueueStart());
         queue.setQueueEnd(queueDto.getQueueEnd());
 
         queueRepository.save(queue);
@@ -91,7 +93,7 @@ public class QueueService {
 
     public List<UserDto> getUsersByQueueId(Long id) {
         Queue queue = queueRepository.findById(id).orElseThrow(() -> new NotFoundException("Очередь с таким id не найдена"));
-        List<QueueUser> queueUsers = queueUserRepository.findByQueueOrderByJoinTimeAsc(queue);
+        List<QueueUser> queueUsers = queueUserRepository.findByQueueOrderByJoinedAtAsc(queue);
         return queueUsers.stream()
                 .map(queueUser -> UserDto.from(queueUser.getUser()))
                 .collect(Collectors.toList());
@@ -105,7 +107,7 @@ public class QueueService {
             if (queue.getUsers().contains(user)) {
                 throw new ConflictException("Этот пользователь уже добавлен в очередь");
             }
-            QueueUser queueUser = new QueueUser(queue, user);
+            QueueUser queueUser = new QueueUser(queue, user, OffsetDateTime.now());
             queueUserRepository.save(queueUser);
             dtoList.add(QueueUserDto.from(queueUser));
         }
@@ -139,7 +141,7 @@ public class QueueService {
             throw new ConflictException("Такой пользователь уже добавлен");
         }
 
-        QueueUser queueUser = new QueueUser(queue, user);
+        QueueUser queueUser = new QueueUser(queue, user, OffsetDateTime.now());
         queueUserRepository.save(queueUser);
 
         return QueueUserDto.from(queueUser);

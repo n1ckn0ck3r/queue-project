@@ -20,22 +20,22 @@ public class QueueUserDto {
     private Long userId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private QueueDto queueDto;
+    private QueueDto queue;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private UserDto userDto;
+    private UserDto user;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private OffsetDateTime joinTime;
+    private OffsetDateTime joinedAt = OffsetDateTime.now();
 
-    public QueueUserDto(QueueDto queueDto, UserDto userDto) {
-        this.queueDto = queueDto;
-        this.userDto = userDto;
+    public QueueUserDto(QueueDto queue, UserDto user) {
+        this.queue = queue;
+        this.user = user;
     }
 
-    public QueueUserDto(QueueDto queueDto, UserDto userDto, OffsetDateTime joinTime) {
-        this.queueDto = queueDto;
-        this.userDto = userDto;
-        this.joinTime = joinTime;
+    public QueueUserDto(QueueDto queue, UserDto user, OffsetDateTime joinedAt) {
+        this.queue = queue;
+        this.user = user;
+        this.joinedAt = joinedAt;
     }
 
     public static QueueUserDto from(QueueDto queueDto, UserDto userDto) {
@@ -50,7 +50,7 @@ public class QueueUserDto {
         return new QueueUserDto(
             QueueDto.from(queueUser.getQueue()), 
             UserDto.from(queueUser.getUser()),
-            queueUser.getJoinTime()
+            queueUser.getJoinedAt()
         );
     }
 }
