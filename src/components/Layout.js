@@ -23,7 +23,7 @@ const Layout = () => {
               <>
                 <Link to="/queues">Очереди</Link>
                 <Link to="/profile">Профиль</Link>
-                {user && user.role === 'ADMIN' && (
+                {((user && user.user && user.user.role === 'ADMIN') || (user && user.role === 'ADMIN')) && (
                   <Link to="/admin">Панель Администратора</Link>
                 )}
                 <button onClick={handleLogout} className="btn btn-secondary">Выход</button>

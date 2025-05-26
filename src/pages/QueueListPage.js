@@ -9,7 +9,6 @@ const QueueListPage = () => {
   const dispatch = useDispatch();
   const { queues, isLoading, error } = useSelector((state) => state.queue);
   const { modal } = useSelector((state) => state.ui);
-  // const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(resetQueueState());

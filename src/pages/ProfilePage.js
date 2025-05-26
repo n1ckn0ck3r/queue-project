@@ -22,8 +22,13 @@ const ProfilePage = () => {
   useEffect(() => {
     if (user) {
       dispatch(resetProfileState());
-      dispatch(fetchUserProfile(user.id));
-      dispatch(fetchUserQueues(user.id));
+      if (user.user && user.user.id) {
+        dispatch(fetchUserProfile(user.user.id));
+        dispatch(fetchUserQueues(user.user.id));
+      } else {
+        dispatch(fetchUserProfile(user.id));
+        dispatch(fetchUserQueues(user.id));
+      }
     }
   }, [dispatch, user]);
 

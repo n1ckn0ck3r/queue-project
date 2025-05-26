@@ -35,6 +35,7 @@ const QueueForm = ({ queue, onClose }) => {
         queueStart: getLocalDateTime(queue.queueStart),
         queueEnd: getLocalDateTime(queue.queueEnd),
       });
+      
     }
   }, [isEditMode, queue]);
 
@@ -90,7 +91,10 @@ const QueueForm = ({ queue, onClose }) => {
     if (!validateForm()) return;
 
     const payload = {
-      disciplineId: formData.discipline.id,
+      discipline: {
+        id: formData.discipline.id,
+        disciplineName: formData.discipline.disciplineName,
+      },
       queueStart: new Date(formData.queueStart).toISOString(),
       queueEnd: new Date(formData.queueEnd).toISOString(),
       active: true,

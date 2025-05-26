@@ -28,13 +28,25 @@ const QueueDetailPage = () => {
 
   const handleJoinQueue = () => {
     if (user && currentQueue) {
-      dispatch(addUserToQueue({ queueId: currentQueue.id, userId: user.id }));
+      if (user.user) {
+        dispatch(addUserToQueue({ queueId: currentQueue.id, userId: user.user.id }))
+          .then(() => dispatch(fetchQueueUsers(id)));
+      } else {
+        dispatch(addUserToQueue({ queueId: currentQueue.id, userId: user.id }))
+          .then(() => dispatch(fetchQueueUsers(id)));
+      }
     }
   };
 
   const handleLeaveQueue = () => {
     if (user && currentQueue) {
-      dispatch(removeUserFromQueue({ queueId: currentQueue.id, userId: user.id }));
+      if (user.user) {
+        dispatch(removeUserFromQueue({ queueId: currentQueue.id, userId: user.user.id }))
+          .then(() => dispatch(fetchQueueUsers(id)));
+      } else {
+        dispatch(removeUserFromQueue({ queueId: currentQueue.id, userId: user.id }))
+          .then(() => dispatch(fetchQueueUsers(id)));
+      }
     }
   };
 
@@ -56,7 +68,7 @@ const QueueDetailPage = () => {
   };
 
   const isUserInQueue = () => {
-    return queueUsers.some(queueUser => queueUser.id === user?.id);
+    return queueUsers.some(queueUser => (user && user.id && queueUser.id === user.id) || (user && user.user && user.user.id && queueUser.id === user.user.id));
   };
 
   if (isLoading && !currentQueue) {
