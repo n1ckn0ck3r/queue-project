@@ -28,6 +28,20 @@ const QueueDetailPage = () => {
 
   const handleJoinQueue = () => {
     if (user && currentQueue) {
+      const now = new Date();
+      const queueStart = new Date(currentQueue.queueStart);
+      const queueEnd = new Date(currentQueue.queueEnd);
+
+      if (now < queueStart) {
+        alert('Очередь еще не началась. Вы не можете присоединиться к ней.');
+        return;
+      }
+
+      if (now > queueEnd) {
+        alert('Очередь уже закончилась. Вы не можете присоединиться к ней.');
+        return;
+      }
+
       if (user.user) {
         dispatch(addUserToQueue({ queueId: currentQueue.id, userId: user.user.id }))
           .then(() => dispatch(fetchQueueUsers(id)));
@@ -71,6 +85,34 @@ const QueueDetailPage = () => {
     return queueUsers.some(queueUser => (user && user.id && queueUser.id === user.id) || (user && user.user && user.user.id && queueUser.id === user.user.id));
   };
 
+  const isQueueClosed = () => {
+    if (!currentQueue) return true;
+
+    const now = new Date();
+    const queueStart = new Date(currentQueue.queueStart);
+    const queueEnd = new Date(currentQueue.queueEnd);
+
+    return now < queueStart || now > queueEnd;
+  };
+
+  const getQueueStatusMessage = () => {
+    if (!currentQueue) return '';
+
+    const now = new Date();
+    const queueStart = new Date(currentQueue.queueStart);
+    const queueEnd = new Date(currentQueue.queueEnd);
+
+    if (now < queueStart) {
+      return 'Очередь еще не началась';
+    }
+
+    if (now > queueEnd) {
+      return 'Очередь уже закончилась';
+    }
+
+    return 'Присоединиться к очереди';
+  };
+
   if (isLoading && !currentQueue) {
     return (
       <div className="spinner-container">
@@ -105,7 +147,12 @@ const QueueDetailPage = () => {
           <h1>{currentQueue.name}</h1>
           <div>
             {!isUserInQueue() ? (
-              <button className="btn btn-primary mr-2" onClick={handleJoinQueue}>
+              <button 
+                className="btn btn-primary mr-2" 
+                onClick={handleJoinQueue}
+                disabled={isQueueClosed()}
+                title={getQueueStatusMessage()}
+              >
                 Присоединиться к очереди
               </button>
             ) : (
