@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("disciplines")
@@ -29,9 +30,14 @@ public class DisciplineController {
         return ResponseEntity.ok(disciplineService.getDisciplineById(id));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<DisciplineDto> updateDisciplineById(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        return ResponseEntity.ok(disciplineService.updateDisciplineById(id, updates));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<DisciplineDto> updateDisciplineById(@PathVariable Long id, @RequestBody DisciplineDto updates) {
-        return ResponseEntity.ok(disciplineService.updateDisciplineTotallyById(id, updates));
+    public ResponseEntity<DisciplineDto> updateDisciplineTotallyById(@PathVariable Long id, @RequestBody DisciplineDto disciplineDto) {
+        return ResponseEntity.ok(disciplineService.updateDisciplineTotallyById(id, disciplineDto));
     }
 
     @DeleteMapping("/{id}")

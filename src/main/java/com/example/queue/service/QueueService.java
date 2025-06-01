@@ -95,7 +95,7 @@ public class QueueService {
         Queue queue = queueRepository.findById(id).orElseThrow(() -> new NotFoundException("Очередь с таким id не найдена"));
         List<QueueUser> queueUsers = queueUserRepository.findByQueueOrderByJoinedAtAsc(queue);
         return queueUsers.stream()
-                .map(queueUser -> UserDto.from(queueUser.getUser()))
+                .map(queueUser -> UserDto.from(queueUser.getUser(), queueUser.getJoinedAt()))
                 .collect(Collectors.toList());
     }
 

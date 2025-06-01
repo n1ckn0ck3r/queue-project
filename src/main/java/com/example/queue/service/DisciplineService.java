@@ -54,9 +54,9 @@ public class DisciplineService {
         return DisciplineDto.from(discipline);
     }
 
-    public DisciplineDto updateDisciplineTotallyById(Long id, DisciplineDto updates) {
+    public DisciplineDto updateDisciplineTotallyById(Long id, DisciplineDto disciplineDto) {
         Discipline discipline = disciplineRepository.findById(id).orElseThrow(() -> new NotFoundException("Дисциплины с таким id не существует"));
-        discipline.setDisciplineName(updates.getDisciplineName());
+        discipline.setDisciplineName(disciplineDto.getDisciplineName());
         disciplineRepository.save(discipline);
         return DisciplineDto.from(discipline);
     }
