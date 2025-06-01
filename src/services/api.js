@@ -1,7 +1,18 @@
 import axios from 'axios';
 
+const hostname = window.location.hostname;
+
+let baseURL;
+if (hostname === 'localhost' || hostname === '127.0.0.1') {
+  baseURL = 'http://localhost:8080';
+} else {
+  // здесь hostname будет равен '25.100.200.50'
+  baseURL = `http://${hostname}:8080`;
+}
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/',
+  // baseURL: 'http://localhost:8080/',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -35,7 +46,7 @@ api.interceptors.response.use(
       
       try {
         // Try to refresh the token      
-        const { data } = await axios.post('http://localhost:8080/refresh_token', {}, { withCredentials: true });
+        const { data } = await axios.post('/refresh_token', {}, { withCredentials: true });
         localStorage.setItem('accessToken', data.accessToken);
         
         // Update the Authorization header
