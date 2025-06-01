@@ -144,7 +144,12 @@ const QueueDetailPage = () => {
                     <span className="mr-2">{index + 1}.</span>
                     {user.username}
                   </div>
-                  <div>{user.email}</div>
+                  <div className="user-info">
+                    <div>{user.email}</div>
+                    <div className="join-time">
+                      <small>Время входа: {user.joinedAt ? new Date(user.joinedAt).toLocaleString("ru-RU") : 'Н/Д'}</small>
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>

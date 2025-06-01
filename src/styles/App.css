@@ -170,6 +170,15 @@
   border-bottom: none;
 }
 
+.user-info {
+  text-align: right;
+}
+
+.join-time {
+  margin-top: 0.25rem;
+  color: #666;
+}
+
 /* Buttons */
 .btn {
   padding: 0.5rem 1rem;
