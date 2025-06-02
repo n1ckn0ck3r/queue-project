@@ -160,9 +160,9 @@ const QueueDetailPage = () => {
                 Покинуть очередь
               </button>
             )}
-            <button className="btn btn-secondary mr-2" onClick={handleEditQueue}>
-              Редактировать
-            </button>
+            {/* <button className="btn btn-secondary mr-2" onClick={handleEditQueue}> */}
+              {/* Редактировать */}
+            {/* </button> */}
             <button className="btn btn-danger" onClick={handleDeleteQueue}>
               Удалить
             </button>

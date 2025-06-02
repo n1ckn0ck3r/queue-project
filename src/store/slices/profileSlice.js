@@ -78,6 +78,12 @@ const profileSlice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.profile = action.payload;
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+          const updatedUser = { ...user, ...action.payload }
+          localStorage.setItem('user', JSON.stringify(user));
+        }
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false;

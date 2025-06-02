@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from '../../services/authService';
+import { updateUserProfile } from './profileSlice';
 
 // Async thunks
 export const register = createAsyncThunk(
@@ -127,6 +128,15 @@ const authSlice = createSlice({
         state.user = null;
         localStorage.removeItem('user');
         state.error = action.payload;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        if (state.user) {
+          if (state.user.user) {
+            state.user.user = { ...state.user.user, ...action.payload };
+          } else {
+            state.user = { ...state.user, ...action.payload };
+          }
+        }
       });
   },
 });
