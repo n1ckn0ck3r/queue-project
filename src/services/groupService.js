@@ -22,7 +22,7 @@ const groupService = {
   },
 
   deleteGroup: async (id) => {
-    const response = await api.delete(`/groups/${id}`);
+    const response = await api.delete(`/groups/${id}?cascade=true`);
     return response.data;
   },
 };
